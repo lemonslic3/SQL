@@ -1,0 +1,34 @@
+-- Database creation practise
+
+CREATE TABLE store (id INTEGER PRIMARY KEY, item_type TEXT, price INTEGER, quantity INTEGER, category TEXT);
+
+INSERT INTO store VALUES (1, "shirts", 5, 4, "tops");
+INSERT INTO store VALUES (2, "trousers", 10, 6, "bottoms");
+INSERT INTO store VALUES (3, "skirts", 7, 2, "bottoms");
+INSERT INTO store VALUES (4, "shorts", 6, 5, "tops");
+INSERT INTO store VALUES (5, "blouses", 6, 6, "tops");
+INSERT INTO store VALUES (6, "jeans", 15, 3, "bottoms");
+INSERT INTO store VALUES (7, "socks", 2, 10, "underwear");
+INSERT INTO store VALUES (8, "bras", 4, 10, "underwear");
+INSERT INTO store VALUES (9, "knickers", 3, 10, "underwear");
+INSERT INTO store VALUES (10, "hoodies", 14, 8, "tops");
+INSERT INTO store VALUES (11, "dresses", 18, 3, "dresses");
+INSERT INTO store VALUES (12, "jumpers", 16, 5, "tops");
+INSERT INTO store VALUES (13, "trainers", 20, 2, "shoes");
+INSERT INTO store VALUES (14, "boots", 24, 3, "shoes");
+INSERT INTO store VALUES (15, "sandals", 18, 2, "shoes");
+
+-- Display the database by quantity where price is >= 10
+SELECT * FROM store 
+WHERE price >= 10 
+ORDER BY quantity;
+
+-- Display the rounded average price of items in a category 
+SELECT ROUND(AVG(price)) FROM store 
+WHERE category = "shoes"; 
+
+-- Display the 5 cheapest items and their price 
+SELECT item_type, price 
+FROM store
+ORDER BY price
+LIMIT 5;

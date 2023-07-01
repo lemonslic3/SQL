@@ -1,0 +1,67 @@
+-- Querying a database with multiple sales tables requiring cleaning
+
+-- How many orders were placed in January? 
+
+SELECT
+    COUNT(orderID) AS january_orders
+FROM JanSales
+WHERE LENGTH(orderID) = 6;
+
+-- How many of those orders were for an iPhone?
+
+SELECT
+    COUNT(Product) AS iPhone_orders
+FROM JanSales
+WHERE LENGTH(orderID) = 6
+AND Product = 'iPhone';
+
+-- Select the customer account numbers for all the orders that were placed in February.
+
+SELECT DISTINCT
+    customers.acctnum AS customer_account_number
+FROM customers
+    LEFT JOIN FebSales
+        ON customers.order_id = FebSales.orderID
+        AND LENGTH(customers.order_id) = 6;
+    
+-- Which product was the cheapest one sold in January, and what was the price?
+
+SELECT DISTINCT 
+    JanSales.Product,
+    MIN(JanSales.price) AS price
+FROM JanSales
+GROUP BY JanSales.Product, JanSales.price
+ORDER BY JanSales.price ASC 
+LIMIT 1;
+
+-- What is the total revenue for each product sold in January?
+
+SELECT
+    JanSales.Product,
+    ROUND(SUM(JanSales.Quantity) * JanSales.price, 2) AS Total_Revenue
+FROM JanSales
+WHERE JanSales.Product <> ''
+GROUP BY JanSales.Product
+ORDER BY Total_Revenue DESC;
+
+-- Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+
+SELECT 
+    FebSales.Product, 
+    FebSales.Quantity,
+    ROUND(SUM(FebSales.Quantity) * FebSales.price, 2) AS Total_Revenue
+FROM FebSales
+WHERE location = '548 Lincoln St, Seattle, WA 98101'
+GROUP BY FebSales.Product;
+
+
+-- How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
+
+SELECT
+    COUNT(DISTINCT customers.acctnum) AS customers_with_multiple_sales, 
+    ROUND(AVG (FebSales.Quantity*FebSales.price),2) AS average_spent
+FROM FebSales
+    LEFT JOIN customers
+    ON FebSales.orderID = customers.order_id
+    AND FebSales.Quantity > 2
+WHERE LENGTH(orderID) = 6;
